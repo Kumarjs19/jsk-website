@@ -1,0 +1,2 @@
+window.openMenu  = function() { var m = document.getElementById('mm'); if (m) m.classList.add('open'); }
+  window.closeMenu = function() { var m = document.getElementById('mm'); if (m) m.classList.remove('open'); }
