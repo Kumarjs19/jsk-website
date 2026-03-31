@@ -1,22 +1,240 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Admin panel for managing JSK website content.">
+  <meta name="theme-color" content="#2c3e50">
+  
+  <!-- Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+  
   <title>JSK Admin</title>
-
-  <script src="https://unpkg.com/decap-cms@3.0.0/dist/decap-cms.js"></script>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <!-- Styles -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    
+    .header {
+      margin-bottom: 30px;
+    }
+    
+    .logo {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+    
+    h1 {
+      color: #2c3e50;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    
+    .content {
+      margin: 30px 0;
+    }
+    
+    .status-message {
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .status-message.loading {
+      display: block;
+      background: #e3f2fd;
+      color: #1976d2;
+      border-left: 4px solid #1976d2;
+    }
+    
+    .status-message.success {
+      display: block;
+      background: #e8f5e9;
+      color: #388e3c;
+      border-left: 4px solid #388e3c;
+    }
+    
+    .status-message.error {
+      display: block;
+      background: #ffebee;
+      color: #c62828;
+      border-left: 4px solid #c62828;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 20px;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .features {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    
+    .features h3 {
+      color: #2c3e50;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      color: #555;
+      font-size: 14px;
+    }
+    
+    .feature-item::before {
+      content: "✓";
+      color: #4caf50;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 12px;
+      color: #999;
+    }
+  </style>
+  
+  <!-- External Scripts -->
+  <script src="https://unpkg.com/decap-cms@3.0.0/dist/decap-cms.js" defer></script>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 </head>
 
 <body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">⚙️</div>
+      <h1>JSK Admin</h1>
+      <p class="subtitle">Content Management System</p>
+    </div>
+    
+    <div class="content">
+      <p style="color: #666; margin-bottom: 20px;">Secure admin panel for managing your JSK website content with ease.</p>
+      
+      <div id="statusMessage" class="status-message"></div>
+      
+      <button onclick="handleLogin()">Sign In with Netlify</button>
+    </div>
+    
+    <div class="features">
+      <h3>Admin Features:</h3>
+      <div class="feature-item">Decap CMS Integration</div>
+      <div class="feature-item">Netlify Identity Authentication</div>
+      <div class="feature-item">Secure Content Management</div>
+      <div class="feature-item">Real-time Updates</div>
+    </div>
+    
+    <div class="footer">
+      <p>Powered by JSK Admin • Last Updated: 2026-03-31</p>
+    </div>
+  </div>
+
   <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
+    // Initialize Netlify Identity
+    function initializeIdentity() {
+      if (window.netlifyIdentity) {
+        console.log('Netlify Identity widget loaded successfully');
+        
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            console.log('No user logged in, showing login modal');
+            showStatus('loading', 'Ready for authentication...');
+          } else {
+            console.log('User already logged in:', user.email);
+            showStatus('success', `Welcome back, ${user.email}!`);
+          }
+        });
+
+        window.netlifyIdentity.on("login", user => {
+          console.log('User logged in:', user.email);
+          showStatus('success', `Successfully logged in as ${user.email}`);
+        });
+
+        window.netlifyIdentity.on("logout", () => {
+          console.log('User logged out');
+          showStatus('loading', 'Logged out successfully');
           window.netlifyIdentity.open();
-        }
-      });
+        });
+      } else {
+        console.warn('Netlify Identity widget not available');
+        showStatus('error', 'Authentication service unavailable');
+      }
     }
+
+    function handleLogin() {
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.open();
+      } else {
+        showStatus('error', 'Authentication service not loaded yet. Please refresh the page.');
+      }
+    }
+
+    function showStatus(type, message) {
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.textContent = message;
+      statusEl.className = 'status-message ' + type;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initializeIdentity);
   </script>
 </body>
 </html>
