@@ -1,6 +1,8 @@
 backend:
   name: git-gateway
   branch: main
+  base_url: https://jsk-website.pages.dev
+  auth_endpoint: api/auth
 
 # No Netlify Identity - GitHub OAuth via Cloudflare Pages
 site_url: https://jsk-website.pages.dev
