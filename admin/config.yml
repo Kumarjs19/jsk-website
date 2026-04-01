@@ -2,6 +2,10 @@ backend:
   name: git-gateway
   branch: main
 
+# No Netlify Identity - GitHub OAuth via Cloudflare Pages
+site_url: https://jsk-website.pages.dev
+display_url: https://jsk-website.pages.dev
+
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
