@@ -3,7 +3,7 @@ backend:
   repo: Kumarjs19/jsk-website
   branch: main
   auth_type: pkce
-  app_id: cms
+  app_id: Ov23li0H0yrV4YQTN3dT
 
 site_url: https://jsk-website.pages.dev
 display_url: https://jsk-website.pages.dev
