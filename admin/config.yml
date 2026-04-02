@@ -1,10 +1,10 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: Kumarjs19/jsk-website
   branch: main
-  base_url: https://jsk-website.pages.dev
-  auth_endpoint: api/auth
+  auth_type: pkce
+  app_id: cms
 
-# No Netlify Identity - GitHub OAuth via Cloudflare Pages
 site_url: https://jsk-website.pages.dev
 display_url: https://jsk-website.pages.dev
 
